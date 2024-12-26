@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squid Game AI</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #FF0066;
+            margin-bottom: 50px;
+            font-size: 64px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 100px; /* 改回较小的间距 */
+            align-items: flex-start;
+            margin-left: 100px;
+            margin-bottom: 50px;
+            padding-bottom: 50px;
+            perspective: 1000px;
+        }
+
+        .custom-button {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 50px;
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+            transition: transform 0.3s ease;
+        }
+
+        .custom-button:hover {
+            transform: translateZ(20px);
+        }
+
+        .image-container {
+            width: 250px;
+            height: 250px;
+        }
+
+        .button-image {
+            width: 250px;
+            height: 250px;
+            object-fit: contain;
+        }
+
+        .description-box {
+            width: 400px;
+            padding: 20px;
+            background: none; /* 移除背景 */
+            color: white;
+        }
+
+        .description-title {
+            font-size: 38px;
+            color: #FF0066;
+            margin-bottom: 10px;
+            font-family: 'Orbitron', sans-serif; /* 科技感字体 */
+            text-transform: uppercase; /* 转换为大写 */
+            letter-spacing: 2px; /* 字母间距 */
+        }
+
+        .description-text {
+            font-size: 20px;
+            line-height: 1.6;
+            font-family: 'Rajdhani', sans-serif; /* 现代感字体 */
+            opacity: 0.9; /* 轻微透明 */
+            letter-spacing: 1px;
+        }
+
+        .button-text {
+            width: 300px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #FF0066; /* 改为红色背景 */
+            color: white;
+            border: none; /* 移除边框 */
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease; /* 只保留缩放动画 */
+            padding: 0;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 28px;
+        }
+
+        .image-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+        }
+
+        .button-image {
+            width: 250px;
+            height: 250px;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
+        }
+
+        .button-text:hover {
+            transform: scale(1.05); /* 悬停时放大 5% */
+            background-color: #FF0066; /* 保持背景色不变 */
+        }
+
+        .image-container::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+        }
+        /* 添加左上��钮样式 */
+        .corner-buttons {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .corner-button {
+            padding: 10px 30px;
+            font-size: 20px;
+            color: white;
+            background: none;
+            border: 2px solid #FF0066;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .corner-button:hover {
+            background-color: #FF0066;
+            transform: translateY(-2px);
+        }
+        /* 为不同长度的文字设置不同的字体大小 */
+        .button-text.large-text {
+            font-size: 38px;
+        }
+
+        .button-text.medium-text {
+            font-size: 32px;
+        }
+
+        .button-text.small-text {
+            font-size: 28px;
+        }
+
+        .button-text:hover {
+            background-color: #FF0066;
+            transform: translateY(-2px);
+        }
+        .rules-modal-content {
+            background-color: black;
+            padding: 40px;
+            border: 2px solid #FF0066;
+            border-radius: 10px;
+            text-align: left;
+            max-width: 600px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .rules-text {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            white-space: pre-line;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .close-button {
+            position: absolute;
+            top: 15px;          /* 调整上边距 */
+            right: 15px;        /* 调整右边距 */
+            color: white;
+            background: none;
+            border: none;
+            font-size: 28px;    /* 增大字体 */
+            cursor: pointer;
+            padding: 5px;
+            width: 40px;        /* 固定宽度 */
+            height: 40px;       /* 固定高度 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-button:hover {
+            color: #FF0066;
+            transform: scale(1.1); /* 悬停时略微放大 */
+        }
+        .rules-modal-content {
+            background-color: black;
+            padding: 40px;
+            border: 2px solid #FF0066;
+            border-radius: 10px;
+            text-align: left;
+            max-width: 600px;
+            position: relative;  /* 确保这个属性存在 */
+            line-height: 1.6;
+        }
+
+        /* 添加媒体查询以适应不同屏幕大小 */
+        @media (max-width: 768px) {
+            .button-container {
+                margin-left: 20px;
+            }
+            
+            .custom-button {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .description-box {
+                width: 100%;
+            }
+        }
+
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="corner-buttons">
+        <a href="https://x.com/Synor_Terminal" target="_blank" class="corner-button">X</a>
+        <a href="https://pump.fun" target="_blank" class="corner-button">PUMP</a>
+    </div>
+    <div class="corner-buttons">
+        <a href="https://x.com/Synor_Terminal" target="_blank" class="corner-button">X</a>
+        <a href="https://pump.fun" target="_blank" class="corner-button">PUMP</a>
+        <button class="corner-button" onclick="showRulesModal()">RULES</button>
+    </div>
+    <div class="modal" id="rulesModal">
+        <div class="rules-modal-content">
+            <button class="close-button" onclick="closeRulesModal()">×</button>
+            <div class="rules-text">
+    Welcome to the Arena of Survival.
+    
+    Step into the world of Squid Game, where your skills, strategy, and nerve are all that stand between you and victory. Each game is a test. Simple rules, high stakes.
+    
+    Can you survive the challenge of the Honeycomb, outsmart your opponent in Marbles？
+    
+    💰 Big rewards await the brave.
+    💥 One wrong move, and you're out.
+    
+    Do you have what it takes to survive all six games and claim your glory? Play now… if you dare.</div>
+        </div>
+    </div>
+    
+    <img src="t.png" alt="Squid Game Logo" style="
+        margin-bottom: 2px;
+        max-width: 600px;
+        height: auto;
+        display: block;
+    ">
+    <div style="
+        color: white;
+        text-align: center;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 24px;
+        letter-spacing: 1px;
+        margin-bottom: 30px;
+        opacity: 0.9;
+    ">
+        ca: coming soon
+    </div>
+    <div style="
+        color: #FF0066;
+        text-align: center;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 24px;
+        letter-spacing: 1px;
+        margin-bottom: 80px;
+        opacity: 0.9;
+    ">
+        Join the Game. Survive the Arena. Win the Glory.
+    </div>
+    <div class="button-container">
+        <div class="custom-button">
+            <div class="image-container">
+                <img src="1.png" alt="Red Light, Green Light" class="button-image">
+            </div>
+            <div class="description-box">
+                <div class="description-title">Red Light, Green Light</div>
+                <div class="description-text">
+                    "Run fast, stop faster. The doll is watching."
+                </div>
+            </div>
+            <button class="button-text" onclick="window.location.href='game.html'">PLAY NOW</button>
+        </div>
+
+        <div class="custom-button">
+            <div class="image-container">
+                <img src="2.png" alt="Honeycomb" class="button-image">
+            </div>
+            <div class="description-box">
+                <div class="description-title">Honeycomb</div>
+                <div class="description-text">
+                    "Precision is your best friend. Crack the candy, and you're out."
+                </div>
+            </div>
+            <button class="button-text">COMING SOON</button>
+        </div>
+
+        <div class="custom-button">
+            <div class="image-container">
+                <img src="3.png" alt="Marbles" class="button-image">
+            </div>
+            <div class="description-box">
+                <div class="description-title">Marbles</div>
+                <div class="description-text">
+                    "Outwit your opponent. Win their marbles, keep your life."
+                </div>
+            </div>
+            <button class="button-text">COMING SOON</button>
+        </div>
+
+        <div class="custom-button">
+            <div class="image-container">
+                <img src="4.png" alt="Tug of War" class="button-image">
+            </div>
+            <div class="description-box">
+                <div class="description-title">Tug of War</div>
+                <div class="description-text">
+                    "Strength isn't enough. Outthink, outlast, outpull."
+                </div>
+            </div>
+            <button class="button-text">COMING SOON</button>
+        </div>
+    </div>
+
+    <script>
+        function showRulesModal() {
+            const modal = document.getElementById('rulesModal');
+            modal.style.display = 'flex';
+        }
+
+        function closeRulesModal() {
+            const modal = document.getElementById('rulesModal');
+            modal.style.display = 'none';
+        }
+
+        // 点击规则模态框外部关闭模框
+        document.getElementById('rulesModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+    createRandomSquidPattern();
+    </script>
+</body>
+</html>

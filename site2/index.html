@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to the Squid Arena</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 120px;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #FF0066;
+            margin-bottom: 30px;
+            font-size: 64px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 32px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .description {
+            color: white;
+            text-align: center;
+            margin: 30px auto;
+            font-size: 24px;
+            line-height: 1.6;
+            max-width: 800px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            opacity: 0.9;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .button-container {
+            margin-top: 50px;
+        }
+
+        .yes-button {
+            padding: 15px 60px;
+            font-size: 32px;
+            color: white;
+            background: none;
+            border: 2px solid #FF0066;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .yes-button:hover {
+            background-color: #FF0066;
+            transform: translateY(-2px);
+        }
+
+        
+        /* 添加模态对话框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: black;
+            padding: 40px;
+            border: 2px solid #FF0066;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .modal-text {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-button {
+            padding: 15px 60px;
+            font-size: 32px;
+            color: white;
+            background: none;
+            border: 2px solid #FF0066;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-button:hover {
+            background-color: #FF0066;
+            transform: translateY(-2px);
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-container {
+            text-align: center;
+        }
+
+        .loading-image {
+            width: 200px;
+            height: auto;
+            margin-bottom: 30px;
+        }
+
+        .progress-container {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 0, 102, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: #FF0066;
+            transition: width 2s linear;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Squid Arena</h1>
+    <div class="subtitle">The Games Begin Now.</div>
+    <div class="subtitle">Test Your Luck. Outsmart the Odds. Survive the Challenge.</div>
+    <div class="button-container">
+        <button class="yes-button" onclick="showModal()">CONTINUE</button>
+    </div>
+    <!-- 添加模态对话框 -->
+    <div class="modal" id="readyModal">
+        <div class="modal-content">
+            <div class="modal-text">Are you ready?</div>
+            <button class="modal-button" onclick="window.location.href='main.html'">YES</button>
+        </div>
+    </div>
+
+    <!-- 添加加载动画的 HTML -->
+    <div id="loading-overlay" style="display: none;">
+        <div class="loading-container">
+            <img src="p.png" alt="Loading" class="loading-image">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showModal() {
+            const modal = document.getElementById('readyModal');
+            modal.style.display = 'flex';
+        }
+
+        // 点击模态框外部关闭模态框
+        document.getElementById('readyModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+        document.querySelector('.modal-button').onclick = function() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const progressBar = document.getElementById('progress');
+            
+            // 显示加载动画
+            loadingOverlay.style.display = 'flex';
+            
+            // 启动进度条动画
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 100);
+            
+            // 进度条完成后跳转
+            setTimeout(() => {
+                window.location.href = 'main.html';
+            }, 2100); // 给进度条留足2秒时间
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="Simple red light green light game from squid game.">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="red, green, light, game, squid, game, simple, game, html5, canvas, javascript, web, development, threejs, three, js">
+    <meta property="og:image" content="img/preview.png" />
+
+    <link rel="stylesheet" href="style.css">
+    <title>Squid Game | Red Light Green Light</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        h1.text {
+            color: #FF0066;
+            margin-bottom: 30px;
+            font-size: 64px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .title {
+            color: #FF0066;
+            font-size: 38px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .info {
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+            line-height: 1.6;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        .modal-content {
+            background-color: black;
+            padding: 40px;
+            border: 2px solid #FF0066;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #FF0066;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            padding: 0;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 28px;
+            text-decoration: none; /* 如果使用 <a> 标签需要这个 */
+        }
+
+        .back-button:hover {
+            transform: scale(1.05);
+        }
+
+        .top-play-box {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 30px 30px;
+            background: none;
+            border: 2px solid #FF0066;
+            border-radius: 5px;
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+            font-size: 20px;
+            z-index: 1000;
+            width: 400px;
+        }
+
+        .top-play-text {
+            margin: 0;
+            color: #FF0066;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='main.html'">BACK TO HOME</button>
+
+    <h1 class="text">Squid Game</h1>
+
+    <div class="modal">
+        <div class="modal-content">
+            <h1 class="title">Red Light Green Light</h1>
+            <p class="info">
+                Your journey begins here. One step too late, and it ends.<br>
+                The rules are simple: <br>
+                <b>Run on green, stop on red.</b>But the <b>doll</b> never misses. <br>
+                Do you trust your timing?<br>
+            </p>
+            <button class="start-btn">loading...</button>
+        </div>
+    </div>
+
+    <div class="top-play-box">
+        <p class="top-play-text">Top ball is Player 1,bottom ball is Player 2.<br>
+            Player 1 can press <b>Up Arrow</b> to move. <br>
+            player 2 can press <b>W</b> to move.</p>
+    </div>
+
+    <script src="three.min.js"></script>
+    <script src="GLTFLoader.js"></script>
+    <script src="gsap.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
